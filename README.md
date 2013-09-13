@@ -17,7 +17,7 @@ Send a build success/failure notification to a FlowDock team inbox
 ```yaml
 build:
   after-steps:
-    - flowdock-notify:
+    - mipearson/flowdock-notify:
         flow-api-token: $TOKEN
         from-address: bob@thebuilder.com.au
 ```
