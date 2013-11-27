@@ -1,6 +1,6 @@
 name: flowdock-notify
 version: 0.0.2
-description: Send a build success or failure notification to a Flowdock team inbox
+description: Send a build success or failure notification to a Flowdock team inbox (with customizable extra success/failure messages)
 keywords:
   - notification
   - flowdock
@@ -11,3 +11,8 @@ properties:
   from-address:
     type: string
     default: wercker
+  passed-extra-message:
+    type: string
+  failed-extra-message:
+    type: string
+

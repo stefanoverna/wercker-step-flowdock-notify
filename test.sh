@@ -10,6 +10,10 @@ export WERCKER_GIT_COMMIT="9c72e232762ec230cc23798732ab1701b4143efa"
 export WERCKER_GIT_BRANCH="master"
 export WERCKER_STEP_ROOT="."
 
+export WERCKER_FLOWDOCK_NOTIFY_FLOW_API_TOKEN="XXX"
 export WERCKER_FLOWDOCK_NOTIFY_FROM_ADDRESS="test@test.com"
+export WERCKER_FLOWDOCK_NOTIFY_PASSED_EXTRA_MESSAGE="<p>Foobar</p><ul><li>Uno due tre</li></ul>"
+export WERCKER_FLOWDOCK_NOTIFY_FAILED_EXTRA_MESSAGE="<p>Foobar</p><ul><li>Uno due tre</li></ul>"
 
 ./run.sh
+

@@ -45,6 +45,8 @@ STEP_PREFIX = "WERCKER_FLOWDOCK_NOTIFY"
 
 from_address = ENV["#{STEP_PREFIX}_FROM_ADDRESS"]
 flow_api_token = ENV["#{STEP_PREFIX}_FLOW_API_TOKEN"]
+passed_extra_message = ENV["#{STEP_PREFIX}_PASSED_EXTRA_MESSAGE"]
+failed_extra_message = ENV["#{STEP_PREFIX}_FAILED_EXTRA_MESSAGE"]
 
 error("flow_api_token required") if blank?(flow_api_token)
 error("from_address required") if blank?(from_address)
@@ -58,16 +60,30 @@ step_name = ENV['WERCKER_FAILED_STEP_DISPLAY_NAME']
 step_message = ENV['WERCKER_FAILED_STEP_DISPLAY_MESSAGE']
 commit_id = ENV['WERCKER_GIT_COMMIT']
 
-subject = "#{application}: build of #{branch} by #{started_by} #{result}"
+subject = "Build of #{branch} by #{started_by} #{result}"
 
 content = if step_name
-  <<-EOF
-  <p>Step <strong>'#{step_name}'</strong> failed.</p>
-  <p>Commit ID #{commit_id}. Message:</p>
-  <pre>#{step_message}</pre>
-  EOF
+  buf = <<-EOF
+    <p>
+      Step <strong>'#{step_name}'</strong> failed.<br/>
+      Commit ID <strong>#{commit_id[0..15]}</strong>.
+    </p>
+    EOF
+  if step_message.to_s.length > 0
+    buf += <<-EOF
+    <p>Message:</p>
+    <pre>#{step_message}</pre>
+    EOF
+  end
+  buf
 else
-  "<p>Commit ID #{commit_id}</p>"
+  "<p>Commit ID #{commit_id[0..15]}</p>"
+end
+
+if result == "passed"
+  content += passed_extra_message.to_s
+else
+  content += failed_extra_message.to_s
 end
 
 message = {
@@ -82,3 +98,4 @@ message = {
 uri = URI.parse("https://api.flowdock.com/v1/messages/team_inbox/#{flow_api_token}")
 
 send(uri, message)
+
