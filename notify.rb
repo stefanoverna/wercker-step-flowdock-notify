@@ -59,8 +59,10 @@ build_id = ENV['WERCKER_BUILD_ID']
 step_name = ENV['WERCKER_FAILED_STEP_DISPLAY_NAME']
 step_message = ENV['WERCKER_FAILED_STEP_DISPLAY_MESSAGE']
 commit_id = ENV['WERCKER_GIT_COMMIT']
+build_passed = result == "passed"
+symbol = build_passed ? '✓' : '✗'
 
-subject = "Build of #{branch} by #{started_by} #{result}"
+subject = "#{symbol} Build of #{branch} by #{started_by} #{result}"
 
 content = if step_name
   buf = <<-EOF
@@ -80,7 +82,7 @@ else
   "<p>Commit ID #{commit_id[0..15]}</p>"
 end
 
-if result == "passed"
+if build_passed
   content += passed_extra_message.to_s
 else
   content += failed_extra_message.to_s
